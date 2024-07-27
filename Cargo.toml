@@ -15,4 +15,8 @@ path = "src/ss_3/ppm_img.rs"
 name = "scene_rays"
 path = "src/ss_4/scene_rays.rs"
 
+[[bin]]
+name = "add_sphere"
+path = "src/ss_5/add_sphere.rs"
+
 [dependencies]
