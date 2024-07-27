@@ -50,8 +50,10 @@ impl Vec3 {
     }
 
     pub fn dot(&self, other: &Self) -> f64 {
-        let v = self.clone() * other.clone();
-        v.sum()
+        self.e
+            .iter()
+            .zip(other.e.iter())
+            .fold(0.0, |res, (u, v)| res + u * v)
     }
 
     pub fn cross(&self, other: &Self) -> Self {
@@ -66,8 +68,10 @@ impl Vec3 {
 }
 
 pub fn dot(lhs: &Vec3, rhs: &Vec3) -> f64 {
-    let v = lhs.clone() * rhs.clone();
-    v.sum()
+    lhs.e
+        .iter()
+        .zip(rhs.e.iter())
+        .fold(0.0, |res, (u, v)| res + u * v)
 }
 
 pub fn cross(lhs: &Vec3, rhs: &Vec3) -> Vec3 {
@@ -362,5 +366,19 @@ mod tests {
                 && (vec_1[1] - ans[1]).abs() < epsilon
                 && (vec_1[2] - ans[2]).abs() < epsilon
         );
+    }
+
+    #[test]
+    fn test_dot() {
+        let vec_1 = Vec3::from_slice([1.0, 2.0, 3.0]);
+        let vec_2 = Vec3::from_slice([2.0, 4.0, 6.0]);
+        let ans = 28.0;
+
+        let dot_product_1 = vec_1.dot(&vec_2);
+        let dot_product_2 = dot(&vec_1, &vec_2);
+
+        let epsilon = std::f64::EPSILON;
+        assert!((ans - dot_product_1).abs() < epsilon);
+        assert!((ans - dot_product_2).abs() < epsilon);
     }
 }
