@@ -1,0 +1,10 @@
+[package]
+name = "ray_tracing_rust"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ppm_img"
+path = "src/ss_2/ppm_img.rs"
+
+[dependencies]
