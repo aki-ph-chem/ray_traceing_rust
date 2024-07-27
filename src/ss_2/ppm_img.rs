@@ -14,6 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     std::writeln!(&mut file, "{header}")?;
     for j in 0..image_height {
+        eprintln!("\rScanlines remaining: {} ", image_height - j);
         for i in 0..image_height {
             let (r, g, b) = (
                 i as f64 / (image_width - 1) as f64,
@@ -29,6 +30,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             std::writeln!(&mut file, "{ir} {ig} {ib}")?;
         }
     }
+    eprintln!("\rDone.   ");
 
     Ok(())
 }
