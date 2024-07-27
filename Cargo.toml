@@ -7,4 +7,8 @@ edition = "2021"
 name = "ppm_img"
 path = "src/ss_2/ppm_img.rs"
 
+[[bin]]
+name = "ppm_img_2"
+path = "src/ss_3/ppm_img.rs"
+
 [dependencies]
