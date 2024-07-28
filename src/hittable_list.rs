@@ -2,7 +2,7 @@ use crate::hittable::{HitRecord, Hittable};
 use std::cell::RefCell;
 use std::rc::Rc;
 
-struct HittableList<T: Hittable> {
+pub struct HittableList<T: Hittable> {
     pub objects: Vec<RefCell<Rc<T>>>,
 }
 

@@ -26,7 +26,7 @@ impl Hittable for Sphere {
         let oc = self.center.clone() - ray.origin().clone();
         let a = ray.direction().norm_squared();
         let h = ray.direction().dot(&oc);
-        let c = oc.norm_squared() - self.radius;
+        let c = oc.norm_squared() - self.radius * self.radius;
 
         let discriminant = h * h - a * c;
         if discriminant < 0.0 {

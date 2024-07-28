@@ -23,4 +23,8 @@ path = "src/ss_5/add_sphere.rs"
 name = "sphere_surface"
 path = "src/ss_6/sphere_surface.rs"
 
+[[bin]]
+name = "sphere_surface_2"
+path = "src/ss_6/sphere_surface_2.rs"
+
 [dependencies]
