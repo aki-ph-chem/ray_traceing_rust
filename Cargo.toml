@@ -31,4 +31,8 @@ path = "src/ss_6/sphere_surface_2.rs"
 name = "sphere_surface_3"
 path = "src/ss_6/sphere_surface_3.rs"
 
+[[bin]]
+name = "sphere_surface_re"
+path = "src/ss_7/sphere_surface.rs"
+
 [dependencies]
