@@ -1,12 +1,14 @@
-use crate::hittable::{HitRecord, Hittable};
+use crate::hittable::{HitRecord, Hittable, HittableV2};
+use crate::interval::Interval;
+use crate::ray::Ray;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-pub struct HittableList<T: Hittable> {
+pub struct HittableList<T: Hittable + HittableV2> {
     pub objects: Vec<RefCell<Rc<T>>>,
 }
 
-impl<T: Hittable> HittableList<T> {
+impl<T: Hittable + HittableV2> HittableList<T> {
     pub fn new() -> Self {
         Self { objects: vec![] }
     }
@@ -26,14 +28,8 @@ impl<T: Hittable> HittableList<T> {
     }
 }
 
-impl<T: Hittable> Hittable for HittableList<T> {
-    fn hit(
-        &self,
-        ray: &crate::ray::Ray,
-        ray_tmin: f64,
-        ray_tmax: f64,
-        rec: &mut HitRecord,
-    ) -> bool {
+impl<T: Hittable + HittableV2> Hittable for HittableList<T> {
+    fn hit(&self, ray: &Ray, ray_tmin: f64, ray_tmax: f64, rec: &mut HitRecord) -> bool {
         let mut tmp_rec = HitRecord::new();
         let mut hit_anything = false;
         let mut closet_so_far = ray_tmax;
@@ -44,6 +40,28 @@ impl<T: Hittable> Hittable for HittableList<T> {
                 .as_ref()
                 .hit(&ray, ray_tmin, closet_so_far, &mut tmp_rec)
             {
+                hit_anything = true;
+                closet_so_far = tmp_rec.t;
+                *rec = tmp_rec.clone();
+            }
+        }
+
+        hit_anything
+    }
+}
+
+impl<T: Hittable + HittableV2> HittableV2 for HittableList<T> {
+    fn hit_v2(&self, ray: &Ray, ray_t: Interval, rec: &mut HitRecord) -> bool {
+        let mut tmp_rec = HitRecord::new();
+        let mut hit_anything = false;
+        let mut closet_so_far = ray_t.max;
+
+        for object in &self.objects {
+            if object.borrow().as_ref().hit_v2(
+                &ray,
+                Interval::new_by_value(ray_t.min, closet_so_far),
+                &mut tmp_rec,
+            ) {
                 hit_anything = true;
                 closet_so_far = tmp_rec.t;
                 *rec = tmp_rec.clone();
