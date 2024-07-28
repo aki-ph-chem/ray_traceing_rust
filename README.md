@@ -30,17 +30,19 @@ $$
 If ray $\boldsymbol{P}(t) = \boldsymbol{Q} + t\boldsymbol{b}$ hit sphere, $\boldsymbol{P}(t)$ satisfies below.
 
 $$
-|\boldsymbol{P}(t) - \boldsymbol{C}| = r\\
-|\boldsymbol{Q} + t\boldsymbol{d} - \boldsymbol{C}| = r
+\begin{aligned}
+    &|\boldsymbol{P}(t) - \boldsymbol{C}| = r\\
+    &|\boldsymbol{Q} + t\boldsymbol{d} - \boldsymbol{C}| = r
+\end{aligned}
 $$
 
 square both sides
 
 $$
 \begin{aligned}
-&|\boldsymbol{Q} + t\boldsymbol{d} - \boldsymbol{C}|^2 = r^2\\
-&(\boldsymbol{d}\cdot\boldsymbol{d}) t^2 - 2\{\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})\}t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) = r^2\\
-&(\boldsymbol{d}\cdot\boldsymbol{d}) t^2 - 2\{\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})\}t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) - r^2 = 0
+    &|\boldsymbol{Q} + t\boldsymbol{d} - \boldsymbol{C}|^2 = r^2\\
+    &(\boldsymbol{d}\cdot\boldsymbol{d}) t^2 - 2\{\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})\}t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) = r^2\\
+    &(\boldsymbol{d}\cdot\boldsymbol{d}) t^2 - 2\{\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})\}t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) - r^2 = 0
 \end{aligned}
 $$
 
@@ -55,7 +57,7 @@ coefficient $a,b,c$ is defined by below
 $$
 \begin{cases}
     &a = \boldsymbol{d}\cdot\boldsymbol{d}\\
-    &b = -2\boldsymbol{d}\cdot(\boldsymbol{C}\\
+    &b = -2\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})\\
     &c =  (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) - r^2
 \end{cases}
 $$
@@ -66,5 +68,24 @@ $$
 D = b^2 - 4ac
 $$
 
+root is
+
+$$
+t = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
+
+more simple
+
+$$
+t = \frac{h \pm \sqrt{h^2 - ac}}{2} \quad \left(h = \frac{-b}{2}\right)
+$$
+
 
 ## ss\_6
+
+- use:
+    - std::rc::Rc\<T\>
+    - std::cell::RefCell\<T\>
+    - trait
+    - generic struct
+    - trait bounder
