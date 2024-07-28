@@ -5,6 +5,10 @@
 
 I implemented program which generat \*\.ppm image file.
 
+result(src/ss\_2/ppm\_img.rs,src/ss\_3/ppm\_img.rs)
+
+<img src=/home/aki/ray_tracing_rust/fig/first_ppm_image.svg>
+
 ## ss\_3
 
 I implemented 3-dimentional vector library and utility.
@@ -16,6 +20,10 @@ I implemented struct Ray.
 $$
 \boldsymbol{P}(t) = \boldsymbol{A} + t\boldsymbol{b}
 $$
+
+result(src/ss\_4/scene\_rays.rs)
+
+<img src=/home/aki/ray_tracing_rust/fig/scene_rays.ppm.svg>
 
 ## ss\_5
 
@@ -80,6 +88,10 @@ $$
 t = \frac{h \pm \sqrt{h^2 - ac}}{2} \quad \left(h = \frac{-b}{2}\right)
 $$
 
+result(src/ss\_5/add\_sphere.rs)
+
+<img src=/home/aki/ray_tracing_rust/fig/add_sphere.ppm.svg>
+
 
 ## ss\_6
 
@@ -89,3 +101,13 @@ $$
     - trait
     - generic struct
     - trait bounder
+
+
+result\_1(src/ss\_6/sphere\_surface.rs)
+
+<img src=/home/aki/ray_tracing_rust/fig/sphere_surface.ppm.svg>
+
+
+result\_2(src/ss\_6/sphere\_surface\_2.rs)
+
+<img src=/home/aki/ray_tracing_rust/fig/sphere_surface_2.ppm.svg>
