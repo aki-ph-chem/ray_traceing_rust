@@ -115,3 +115,7 @@ result\_1([src/ss\_6/sphere\_surface.rs](src/ss_6/sphere_surface.rs))
 result\_2([src/ss\_6/sphere\_surface\_2.rs](src/ss_6/sphere_surface_2.rs))
 
 <img src=fig/sphere_surface_2.ppm.svg>
+
+## ss\_7
+
+implemented struct Camera and refacterd main()
