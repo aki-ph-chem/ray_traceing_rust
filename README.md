@@ -14,27 +14,27 @@ I implemented 3-dimentional vector library and utility.
 I implemented struct Ray.
 
 $$
-\bm{P}(t) = \bm{A} + t\bm{b}
+\boldsymbol{P}(t) = \boldsymbol{A} + t\boldsymbol{b}
 $$
 
 ## ss\_5
 
 ### shpere:
 
-for point $\bm{P} = (x,y,z), \bm{C} = (C_x, C_y,C_z)$
+for point $\boldsymbol{P} = (x,y,z), \boldsymbol{C} = (C_x, C_y,C_z)$
 
 $$
-|\bm{P} - \bm{C}| = r
+|\boldsymbol{P} - \boldsymbol{C}| = r
 $$
 
-If ray $\bm{P}(t) = \bm{Q} + t\bm{b}$ hit sphere, $\bm{P}(t)$ satisfies below.
+If ray $\boldsymbol{P}(t) = \boldsymbol{Q} + t\boldsymbol{b}$ hit sphere, $\boldsymbol{P}(t)$ satisfies below.
 
 $$
-|\bm{P}(t) - \bm{C}| = r
+|\boldsymbol{P}(t) - \boldsymbol{C}| = r
 $$
 
 $$
-|\bm{Q} + t\bm{d} - \bm{C}| = r
+|\boldsymbol{Q} + t\boldsymbol{d} - \boldsymbol{C}| = r
 $$
 
 ## ss\_6
