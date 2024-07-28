@@ -19,4 +19,8 @@ path = "src/ss_4/scene_rays.rs"
 name = "add_sphere"
 path = "src/ss_5/add_sphere.rs"
 
+[[bin]]
+name = "sphere_surface"
+path = "src/ss_6/sphere_surface.rs"
+
 [dependencies]
