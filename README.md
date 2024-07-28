@@ -1,5 +1,7 @@
 # Ray Trasing by Rust
 
+on [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
+
 <!-- memo -->
 ## ss\_2
 
