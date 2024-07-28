@@ -37,24 +37,34 @@ $$
 square both sides
 
 $$
-|\boldsymbol{Q} + t\boldsymbol{d} - \boldsymbol{C}|^2 = r^2\\
-\boldsymbol{d}\cdot\boldsymbol{d} t^2 - 2\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) = r^2\\
-\boldsymbol{d}\cdot\boldsymbol{d} t^2 - 2\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) - r^2 = 0
+\begin{aligned}
+&|\boldsymbol{Q} + t\boldsymbol{d} - \boldsymbol{C}|^2 = r^2\\
+&(\boldsymbol{d}\cdot\boldsymbol{d}) t^2 - 2\{\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})\}t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) = r^2\\
+&(\boldsymbol{d}\cdot\boldsymbol{d}) t^2 - 2\{\boldsymbol{d}\cdot(\boldsymbol{C} - \boldsymbol{Q})\}t + (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) - r^2 = 0
+\end{aligned}
 $$
 
 quadratic equation
+
 $$
 at^2 + bt + c = 0
 $$
 
+coefficient $a,b,c$ is defined by below
+
 $$
-a = \boldsymbol{d}\cdot\boldsymbol{d}\\
-b = -2\boldsymbol{d}\cdot(\boldsymbol{C}\\
-c =  (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) - r^2
+\begin{cases}
+    &a = \boldsymbol{d}\cdot\boldsymbol{d}\\
+    &b = -2\boldsymbol{d}\cdot(\boldsymbol{C}\\
+    &c =  (\boldsymbol{C} - \boldsymbol{Q})\cdot(\boldsymbol{C} - \boldsymbol{Q}) - r^2
+\end{cases}
 $$
+
+and discreminant of quadratic equation $D$ is devined by below
 
 $$
 D = b^2 - 4ac
 $$
+
 
 ## ss\_6
