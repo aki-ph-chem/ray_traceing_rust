@@ -1,3 +1,4 @@
+use crate::utl;
 use std::fmt::Display;
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub};
 
@@ -14,6 +15,46 @@ impl Vec3 {
 
     pub fn from_slice(slice: [f64; 3]) -> Self {
         Self { e: slice }
+    }
+
+    pub fn new_unit_vec(other: Self) -> Self {
+        let norm_other = other.norm();
+        other / norm_other
+    }
+
+    pub fn random() -> Self {
+        let mut random = utl::Random::new();
+        Self {
+            e: [
+                random.random_f64(),
+                random.random_f64(),
+                random.random_f64(),
+            ],
+        }
+    }
+
+    pub fn random_by_range(min: f64, max: f64) -> Self {
+        let mut random = utl::Random::new();
+        Self {
+            e: [
+                random.random_f64_range(min, max),
+                random.random_f64_range(min, max),
+                random.random_f64_range(min, max),
+            ],
+        }
+    }
+
+    pub fn random_in_unit_sphere() -> Self {
+        loop {
+            let p = Self::random_by_range(-1.0, 1.0);
+            if p.norm() < 1.0 {
+                return p;
+            }
+        }
+    }
+
+    pub fn random_unit_vector() -> Self {
+        Self::new_unit_vec(Self::random_in_unit_sphere())
     }
 
     pub fn x(&self) -> f64 {
@@ -34,11 +75,6 @@ impl Vec3 {
 
     pub fn norm(&self) -> f64 {
         self.norm_squared().sqrt()
-    }
-
-    pub fn new_unit_vec(other: Self) -> Self {
-        let norm_other = other.norm();
-        other / norm_other
     }
 
     pub fn normalize(&mut self) {
@@ -380,5 +416,28 @@ mod tests {
         let epsilon = std::f64::EPSILON;
         assert!((ans - dot_product_1).abs() < epsilon);
         assert!((ans - dot_product_2).abs() < epsilon);
+    }
+
+    #[test]
+    fn test_random() {
+        let vec_random_01 = Vec3::random();
+        for v in vec_random_01.e {
+            assert!(v >= 0.0 && v < 1.0);
+        }
+
+        let (min, max) = (1.5, 5.6);
+        let vec_random_range = Vec3::random_by_range(min, max);
+        for v in vec_random_range.e {
+            assert!(v >= min && v < max);
+        }
+    }
+
+    #[test]
+    fn test_random_in_unit_sphere() {
+        let vec_in_unit_sphere = Vec3::random_in_unit_sphere();
+        assert!(vec_in_unit_sphere.norm_squared() < 1.0);
+
+        let vec_to_unit_sphere = Vec3::random_unit_vector();
+        assert!((vec_to_unit_sphere.norm_squared() - 1.0).abs() < std::f64::EPSILON);
     }
 }
