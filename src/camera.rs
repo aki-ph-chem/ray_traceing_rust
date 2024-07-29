@@ -12,23 +12,29 @@ use std::io::Write;
 pub struct Camera {
     pub aspect_ratio: f64,
     pub image_width: i32,
+    pub samples_per_pixel: i32,
+    pixel_samples_scale: f64,
     image_height: i32,
     center: Point3,
     pixel00_loc: Point3,
     pixel_delta_u: Vec3,
     pixel_delta_v: Vec3,
+    random: utl::Random,
 }
 
 impl Camera {
     pub fn new() -> Self {
         Self {
-            aspect_ratio: 0.0,
-            image_width: 0,
+            aspect_ratio: 1.0,
+            image_width: 100,
+            samples_per_pixel: 10,
+            pixel_samples_scale: 0.0,
             image_height: 0,
             center: Point3::new(),
             pixel00_loc: Point3::new(),
             pixel_delta_u: Vec3::new(),
             pixel_delta_v: Vec3::new(),
+            random: utl::Random::new(),
         }
     }
 
@@ -60,7 +66,35 @@ impl Camera {
         Ok(())
     }
 
-    pub fn initialize(&mut self) {
+    pub fn render_v2<T: HittableV2>(
+        &mut self,
+        world: &T,
+        file_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        self.initialize();
+
+        let mut file = File::create(file_name)?;
+        let header = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
+        std::writeln!(&mut file, "{header}")?;
+        for j in 0..self.image_height {
+            eprintln!("\rScanlines remaining: {} ", self.image_height - j);
+            for i in 0..self.image_width {
+                let mut pixel_color = Color::new();
+                for _sample in 0..self.samples_per_pixel {
+                    let ray = self.get_ray(i, j);
+                    pixel_color += Self::ray_color(&ray, world);
+                }
+                pixel_color *= self.pixel_samples_scale;
+                write_color(&mut file, &pixel_color)?;
+                pixel_color /= self.pixel_samples_scale;
+            }
+        }
+        eprintln!("\rDone.   ");
+
+        Ok(())
+    }
+
+    fn initialize(&mut self) {
         // calculate the image height (Its ensure that it's at leat 1)
         self.image_height = (self.image_width as f64 / self.aspect_ratio) as i32;
         self.image_height = if self.image_height < 1 {
@@ -68,6 +102,7 @@ impl Camera {
         } else {
             self.image_height
         };
+        self.pixel_samples_scale = 1.0 / self.samples_per_pixel as f64;
 
         // camera
         self.center = Point3::from_slice([0.0, 0.0, 0.0]);
@@ -90,6 +125,25 @@ impl Camera {
             - viewport_v / 2.0;
         self.pixel00_loc =
             viewport_upper_left + 0.5 * (self.pixel_delta_u.clone() + self.pixel_delta_v.clone());
+    }
+
+    fn get_ray(&mut self, i: i32, j: i32) -> Ray {
+        let offset = self.sample_square();
+        let pixel_sample = self.pixel00_loc.clone()
+            + (i as f64 + offset.x()) * self.pixel_delta_u.clone()
+            + (j as f64 + offset.y()) * self.pixel_delta_v.clone();
+        let ray_origin = self.center.clone();
+        let ray_direction = pixel_sample - ray_origin.clone();
+
+        Ray::from_origin_dir(&ray_origin, &ray_direction)
+    }
+
+    fn sample_square(&mut self) -> Vec3 {
+        Vec3::from_slice([
+            self.random.random_f64() - 0.5,
+            self.random.random_f64() - 0.5,
+            0.0,
+        ])
     }
 
     pub fn ray_color<T: HittableV2>(ray: &Ray, world: &T) -> Color {

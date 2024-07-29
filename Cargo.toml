@@ -35,5 +35,9 @@ path = "src/ss_6/sphere_surface_3.rs"
 name = "sphere_surface_re"
 path = "src/ss_7/sphere_surface.rs"
 
+[[bin]]
+name = "antialiasing"
+path = "src/ss_8/antialiasing.rs"
+
 [dependencies]
 rand = "0.8.5"
