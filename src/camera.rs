@@ -94,6 +94,34 @@ impl Camera {
         Ok(())
     }
 
+    pub fn render_diffuse<T: HittableV2>(
+        &mut self,
+        world: &T,
+        file_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        self.initialize();
+
+        let mut file = File::create(file_name)?;
+        let header = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
+        std::writeln!(&mut file, "{header}")?;
+        for j in 0..self.image_height {
+            eprintln!("\rScanlines remaining: {} ", self.image_height - j);
+            for i in 0..self.image_width {
+                let mut pixel_color = Color::new();
+                for _sample in 0..self.samples_per_pixel {
+                    let ray = self.get_ray(i, j);
+                    pixel_color += Self::ray_color_diffuse(&ray, world);
+                }
+                pixel_color *= self.pixel_samples_scale;
+                write_color(&mut file, &pixel_color)?;
+                pixel_color /= self.pixel_samples_scale;
+            }
+        }
+        eprintln!("\rDone.   ");
+
+        Ok(())
+    }
+
     fn initialize(&mut self) {
         // calculate the image height (Its ensure that it's at leat 1)
         self.image_height = (self.image_width as f64 / self.aspect_ratio) as i32;
@@ -154,6 +182,23 @@ impl Camera {
             &mut rec,
         ) {
             return 0.5 * (rec.normal.clone() + Color::from_slice([1.0, 1.0, 1.0]));
+        }
+
+        let unit_direction = Vec3::new_unit_vec(ray.direction().clone());
+        let a = 0.5 * (unit_direction.y() + 1.0);
+
+        (1.0 - a) * Color::from_slice([1.0, 1.0, 1.0]) + a * Color::from_slice([0.5, 0.7, 1.0])
+    }
+
+    pub fn ray_color_diffuse<T: HittableV2>(ray: &Ray, world: &T) -> Color {
+        let mut rec = HitRecord::new();
+        if world.hit_v2(
+            &ray,
+            Interval::new_by_value(0.0, utl::constans::INFINITY),
+            &mut rec,
+        ) {
+            let direction = Vec3::random_on_hemisphere(&rec.normal);
+            return 0.5 * Self::ray_color_diffuse(&Ray::from_origin_dir(&rec.p, &direction), world);
         }
 
         let unit_direction = Vec3::new_unit_vec(ray.direction().clone());
