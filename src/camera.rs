@@ -224,7 +224,7 @@ impl Camera {
         let mut rec = HitRecord::new();
         if world.hit_v2(
             &ray,
-            Interval::new_by_value(0.0, utl::constans::INFINITY),
+            Interval::new_by_value(0.001, utl::constans::INFINITY),
             &mut rec,
         ) {
             let direction = Vec3::random_on_hemisphere(&rec.normal);
@@ -245,7 +245,7 @@ impl Camera {
         let mut rec = HitRecord::new();
         if world.hit_v2(
             &ray,
-            Interval::new_by_value(0.0, utl::constans::INFINITY),
+            Interval::new_by_value(0.001, utl::constans::INFINITY),
             &mut rec,
         ) {
             let direction = Vec3::random_on_hemisphere(&rec.normal);
