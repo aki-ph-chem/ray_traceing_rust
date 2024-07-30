@@ -91,7 +91,7 @@ $$
 more simple
 
 $$
-t = \frac{h \pm \sqrt{h^2 - ac}}{2} \quad \left(h = \frac{-b}{2}\right)
+t = \frac{h \pm \sqrt{h^2 - ac}}{a} \quad \left(h = \frac{-b}{2}\right)
 $$
 
 result([src/ss\_5/add\_sphere.rs](src/ss_5/add_sphere.rs))
