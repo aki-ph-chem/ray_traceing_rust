@@ -121,3 +121,19 @@ result\_2([src/ss\_6/sphere\_surface\_2.rs](src/ss_6/sphere_surface_2.rs))
 ## ss\_7
 
 implemented struct Camera and refacterd main()
+
+## ss\_8
+
+antialiasing
+
+result([src/ss\_8/antialiasing.rs](src/ss_8/antialiasing.rs))
+
+<img src=fig/antialiasing.ppm.svg>
+
+## ss\_9
+
+diffuse materials
+
+result\_1([src/ss\_9/diffuse_sphere.rs](src/ss_9/diffuse_sphere.rs))
+
+<img src=fig/diffuse_sphere.ppm.svg>
