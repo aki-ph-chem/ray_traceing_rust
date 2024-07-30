@@ -224,7 +224,7 @@ impl Camera {
         let mut rec = HitRecord::new();
         if world.hit_v2(
             &ray,
-            Interval::new_by_value(0.001, utl::constans::INFINITY),
+            Interval::new_by_value(0.0, utl::constans::INFINITY),
             &mut rec,
         ) {
             let direction = Vec3::random_on_hemisphere(&rec.normal);
@@ -239,7 +239,7 @@ impl Camera {
 
     pub fn ray_color_diffuse_max_depth<T: HittableV2>(ray: &Ray, depth: i32, world: &T) -> Color {
         if depth <= 0 {
-            Color::from_slice([0.0, 0.0, 0.0]);
+            return Color::from_slice([0.0, 0.0, 0.0]);
         }
 
         let mut rec = HitRecord::new();
