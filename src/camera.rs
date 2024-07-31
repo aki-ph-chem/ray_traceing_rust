@@ -1,4 +1,4 @@
-use crate::color::{write_color, Color};
+use crate::color::{write_color, write_color_gamma, Color};
 use crate::hittable::HitRecord;
 use crate::hittable::HittableV2;
 use crate::interval::Interval;
@@ -172,6 +172,35 @@ impl Camera {
                 }
                 pixel_color *= self.pixel_samples_scale;
                 write_color(&mut file, &pixel_color)?;
+                pixel_color /= self.pixel_samples_scale;
+            }
+        }
+        eprintln!("\rDone.   ");
+
+        Ok(())
+    }
+
+    pub fn render_gamma<T: HittableV2>(
+        &mut self,
+        gamma: f64,
+        world: &T,
+        file_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        self.initialize();
+
+        let mut file = File::create(file_name)?;
+        let header = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
+        std::writeln!(&mut file, "{header}")?;
+        for j in 0..self.image_height {
+            eprintln!("\rScanlines remaining: {} ", self.image_height - j);
+            for i in 0..self.image_width {
+                let mut pixel_color = Color::new();
+                for _sample in 0..self.samples_per_pixel {
+                    let ray = self.get_ray(i, j);
+                    pixel_color += Self::ray_color_lambertian(&ray, self.max_depth, world);
+                }
+                pixel_color *= self.pixel_samples_scale;
+                write_color_gamma(gamma, &mut file, &pixel_color)?;
                 pixel_color /= self.pixel_samples_scale;
             }
         }

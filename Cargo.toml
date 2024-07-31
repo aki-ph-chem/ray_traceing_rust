@@ -51,5 +51,9 @@ path = "src/ss_9/diffuse_sphere_max_depth.rs"
 name = "lambertian"
 path = "src/ss_9/lambertian.rs"
 
+[[bin]]
+name = "gamma_correction"
+path = "src/ss_9/gamma_correction.rs"
+
 [dependencies]
 rand = "0.8.5"
