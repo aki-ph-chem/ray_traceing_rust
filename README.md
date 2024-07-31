@@ -27,6 +27,11 @@ $$
 \boldsymbol{P}(t) = \boldsymbol{A} + t\boldsymbol{b}
 $$
 
+- ray tracer
+    1. clculate the ray from the "eye" through the pixel
+    2. determine which object the ray intersects
+    3. compute a color for the closest intersection point
+
 result([src/ss\_4/scene\_rays.rs](src/ss_4/scene_rays.rs))
 
 <img src=fig/scene_rays.ppm.svg>
