@@ -43,5 +43,13 @@ path = "src/ss_8/antialiasing.rs"
 name = "diffuse_sphere"
 path = "src/ss_9/diffuse_sphere.rs"
 
+[[bin]]
+name = "diffuse_sphere_max_depth"
+path = "src/ss_9/diffuse_sphere_max_depth.rs"
+
+[[bin]]
+name = "lambertian"
+path = "src/ss_9/lambertian.rs"
+
 [dependencies]
 rand = "0.8.5"
