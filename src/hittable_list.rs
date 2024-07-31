@@ -1,4 +1,5 @@
 use crate::hittable::{HitRecord, Hittable, HittableV2};
+use crate::hittable_material::{HitRecordMat, HittableMat};
 use crate::interval::Interval;
 use crate::ray::Ray;
 use std::cell::RefCell;
@@ -58,6 +59,27 @@ impl<T: HittableV2> HittableV2 for HittableList<T> {
 
         for object in &self.objects {
             if object.as_ref().borrow().hit_v2(
+                &ray,
+                Interval::new_by_value(ray_t.min, closet_so_far),
+                &mut tmp_rec,
+            ) {
+                hit_anything = true;
+                closet_so_far = tmp_rec.t;
+                *rec = tmp_rec.clone();
+            }
+        }
+
+        hit_anything
+    }
+}
+impl<T: HittableMat> HittableMat for HittableList<T> {
+    fn hit_mat(&self, ray: &Ray, ray_t: Interval, rec: &mut HitRecordMat) -> bool {
+        let mut tmp_rec = HitRecordMat::new();
+        let mut hit_anything = false;
+        let mut closet_so_far = ray_t.max;
+
+        for object in &self.objects {
+            if object.as_ref().borrow().hit_mat(
                 &ray,
                 Interval::new_by_value(ray_t.min, closet_so_far),
                 &mut tmp_rec,

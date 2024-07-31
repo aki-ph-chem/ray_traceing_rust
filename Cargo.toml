@@ -55,5 +55,9 @@ path = "src/ss_9/lambertian.rs"
 name = "gamma_correction"
 path = "src/ss_9/gamma_correction.rs"
 
+[[bin]]
+name = "metal_sphere"
+path = "src/ss_10/metal_sphere.rs"
+
 [dependencies]
 rand = "0.8.5"

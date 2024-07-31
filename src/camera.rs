@@ -1,6 +1,7 @@
 use crate::color::{write_color, write_color_gamma, Color};
 use crate::hittable::HitRecord;
 use crate::hittable::HittableV2;
+use crate::hittable_material::{HitRecordMat, HittableMat};
 use crate::interval::Interval;
 use crate::ray::Ray;
 use crate::utl;
@@ -209,6 +210,35 @@ impl Camera {
         Ok(())
     }
 
+    pub fn render_material<T: HittableMat>(
+        &mut self,
+        gamma: f64,
+        world: &T,
+        file_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        self.initialize();
+
+        let mut file = File::create(file_name)?;
+        let header = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
+        std::writeln!(&mut file, "{header}")?;
+        for j in 0..self.image_height {
+            eprintln!("\rScanlines remaining: {} ", self.image_height - j);
+            for i in 0..self.image_width {
+                let mut pixel_color = Color::new();
+                for _sample in 0..self.samples_per_pixel {
+                    let ray = self.get_ray(i, j);
+                    pixel_color += Self::ray_color_material(&ray, self.max_depth, world);
+                }
+                pixel_color *= self.pixel_samples_scale;
+                write_color_gamma(gamma, &mut file, &pixel_color)?;
+                pixel_color /= self.pixel_samples_scale;
+            }
+        }
+        eprintln!("\rDone.   ");
+
+        Ok(())
+    }
+
     fn initialize(&mut self) {
         // calculate the image height (Its ensure that it's at leat 1)
         self.image_height = (self.image_width as f64 / self.aspect_ratio) as i32;
@@ -338,6 +368,36 @@ impl Camera {
                     depth - 1,
                     world,
                 );
+        }
+
+        let unit_direction = Vec3::new_unit_vec(ray.direction().clone());
+        let a = 0.5 * (unit_direction.y() + 1.0);
+
+        (1.0 - a) * Color::from_slice([1.0, 1.0, 1.0]) + a * Color::from_slice([0.5, 0.7, 1.0])
+    }
+
+    pub fn ray_color_material<T: HittableMat>(ray: &Ray, depth: i32, world: &T) -> Color {
+        if depth <= 0 {
+            return Color::from_slice([0.0, 0.0, 0.0]);
+        }
+
+        let mut rec = HitRecordMat::new();
+        if world.hit_mat(
+            &ray,
+            Interval::new_by_value(0.001, utl::constans::INFINITY),
+            &mut rec,
+        ) {
+            let mut scatterd = Ray::new();
+            let mut attenuation = Color::new();
+            if rec.mat.clone().unwrap().as_ref().borrow().scatter(
+                &ray,
+                &rec,
+                &mut attenuation,
+                &mut scatterd,
+            ) {
+                return attenuation * Self::ray_color_material(&scatterd, depth - 1, world);
+            }
+            return Color::new();
         }
 
         let unit_direction = Vec3::new_unit_vec(ray.direction().clone());
