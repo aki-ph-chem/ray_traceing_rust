@@ -67,6 +67,10 @@ impl Vec3 {
         Self::new_unit_vec(Self::random_in_unit_sphere())
     }
 
+    pub fn refrect(v: &Self, n: &Self) -> Self {
+        v.clone() - 2.0 * v.dot(&n) * n.clone()
+    }
+
     pub fn x(&self) -> f64 {
         self.e[0]
     }
@@ -85,6 +89,11 @@ impl Vec3 {
 
     pub fn norm(&self) -> f64 {
         self.norm_squared().sqrt()
+    }
+
+    pub fn near_zero(&self) -> bool {
+        let s = 1e-8;
+        self.x().abs() < s && self.y() < s && self.z() < s
     }
 
     pub fn normalize(&mut self) {
