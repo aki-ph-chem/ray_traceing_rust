@@ -5,7 +5,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 pub struct HittableList<T> {
-    pub objects: Vec<RefCell<Rc<T>>>,
+    pub objects: Vec<Rc<RefCell<T>>>,
 }
 
 impl<T> HittableList<T> {
@@ -13,7 +13,7 @@ impl<T> HittableList<T> {
         Self { objects: vec![] }
     }
 
-    pub fn from_object(object: RefCell<Rc<T>>) -> Self {
+    pub fn from_object(object: Rc<RefCell<T>>) -> Self {
         Self {
             objects: vec![object],
         }
@@ -23,7 +23,7 @@ impl<T> HittableList<T> {
         self.objects.clear();
     }
 
-    pub fn add(&mut self, object: RefCell<Rc<T>>) {
+    pub fn add(&mut self, object: Rc<RefCell<T>>) {
         self.objects.push(object);
     }
 }
@@ -36,8 +36,8 @@ impl<T: Hittable> Hittable for HittableList<T> {
 
         for object in &self.objects {
             if object
-                .borrow()
                 .as_ref()
+                .borrow()
                 .hit(&ray, ray_tmin, closet_so_far, &mut tmp_rec)
             {
                 hit_anything = true;
@@ -57,7 +57,7 @@ impl<T: HittableV2> HittableV2 for HittableList<T> {
         let mut closet_so_far = ray_t.max;
 
         for object in &self.objects {
-            if object.borrow().as_ref().hit_v2(
+            if object.as_ref().borrow().hit_v2(
                 &ray,
                 Interval::new_by_value(ray_t.min, closet_so_far),
                 &mut tmp_rec,

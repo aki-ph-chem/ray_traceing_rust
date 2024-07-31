@@ -39,11 +39,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // world
     let mut world = HittableList::new();
-    world.add(RefCell::new(Rc::new(Sphere::new(
+    world.add(Rc::new(RefCell::new(Sphere::new(
         &Point3::from_slice([0.0, 0.0, -1.0]),
         0.5,
     ))));
-    world.add(RefCell::new(Rc::new(Sphere::new(
+    world.add(Rc::new(RefCell::new(Sphere::new(
         &Point3::from_slice([0.0, -100.5, -1.0]),
         100.0,
     ))));
