@@ -4,11 +4,11 @@ use crate::ray::Ray;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-pub struct HittableList<T: Hittable + HittableV2> {
+pub struct HittableList<T> {
     pub objects: Vec<RefCell<Rc<T>>>,
 }
 
-impl<T: Hittable + HittableV2> HittableList<T> {
+impl<T> HittableList<T> {
     pub fn new() -> Self {
         Self { objects: vec![] }
     }
@@ -28,7 +28,7 @@ impl<T: Hittable + HittableV2> HittableList<T> {
     }
 }
 
-impl<T: Hittable + HittableV2> Hittable for HittableList<T> {
+impl<T: Hittable> Hittable for HittableList<T> {
     fn hit(&self, ray: &Ray, ray_tmin: f64, ray_tmax: f64, rec: &mut HitRecord) -> bool {
         let mut tmp_rec = HitRecord::new();
         let mut hit_anything = false;
@@ -50,7 +50,7 @@ impl<T: Hittable + HittableV2> Hittable for HittableList<T> {
     }
 }
 
-impl<T: Hittable + HittableV2> HittableV2 for HittableList<T> {
+impl<T: HittableV2> HittableV2 for HittableList<T> {
     fn hit_v2(&self, ray: &Ray, ray_t: Interval, rec: &mut HitRecord) -> bool {
         let mut tmp_rec = HitRecord::new();
         let mut hit_anything = false;
