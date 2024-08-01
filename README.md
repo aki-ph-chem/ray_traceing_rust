@@ -18,7 +18,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let file_name = argv[1].clone();
 
-    let header = format!("P3\n{image_width} {image_height}\n255\n");
 
     /*
        some code
@@ -149,7 +148,7 @@ pub trait Hittable {
 }
 ```
 
-this code: for `struct Sphere`
+in this code I implemented it for `struct Sphere`
 ```Rust
 impl Hittable for Sphere {
     fn hit(&self, ray: &Ray, ray_tmin: f64, ray_tmax: f64, rec: &mut HitRecord) -> bool {
@@ -160,7 +159,7 @@ impl Hittable for Sphere {
 }
 ```
 
-in C++ use std::vector\<std::shared\_ptr\<T\>\>
+in C++(this text) use std::vector\<std::shared\_ptr\<T\>\>
 
 in Rust use Vec\<Rc\<RefCell\<T\>\>\>
 
@@ -323,7 +322,7 @@ point:
 not
 
 ```Rust
-pub mat: <Rc<RefCell<T>>>,
+pub mat: Rc<RefCell<T>>,
 ```
 under the trait bunder `T: Material<T>`
 
