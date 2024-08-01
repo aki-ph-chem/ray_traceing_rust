@@ -5,6 +5,31 @@ on [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInO
 <!-- memo -->
 ## ss\_2
 
+to save result as file
+
+```Rust
+use std::fs::File;
+use std::io::Write;
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let argv = std::env::args().collect::<Vec<String>>();
+    if argv.len() < 2 {
+        panic!("Error: invalid args");
+    }
+    let file_name = argv[1].clone();
+
+    let header = format!("P3\n{image_width} {image_height}\n255\n");
+
+    /*
+       some code
+     */
+
+    std::writeln!(&mut file, some_string)?;
+
+    Ok(())
+}
+```
+
 I implemented program which generat \*\.ppm image file.
 
 result([src/ss\_2/ppm\_img.rs](src/ss_2/ppm_img.rs))
@@ -109,10 +134,60 @@ result([src/ss\_5/add\_sphere.rs](src/ss_5/add_sphere.rs))
 - use:
     - std::rc::Rc\<T\>
     - std::cell::RefCell\<T\>
+    - Rc\<RefCell\<T\>\>
     - trait
     - generic struct
     - trait bounder
 
+in C++ define `abstract class Hittable` and inherit it from some object.
+
+in Rust define `trait Hittable` and implemented it to some struct.
+
+```Rust
+pub trait Hittable {
+    fn hit(&self, ray: &Ray, ray_tmin: f64, ray_tmax: f64, rec: &mut HitRecord) -> bool;
+}
+```
+
+this code: for `struct Sphere`
+```Rust
+impl Hittable for Sphere {
+    fn hit(&self, ray: &Ray, ray_tmin: f64, ray_tmax: f64, rec: &mut HitRecord) -> bool {
+        /*
+        some code
+        */
+    }
+}
+```
+
+in C++ use std::vector\<std::shared\_ptr\<T\>\>
+
+in Rust use Vec\<Rc\<RefCell\<T\>\>\>
+
+```Rust
+pub struct HittableList<T> {
+    pub objects: Vec<Rc<RefCell<T>>>,
+}
+```
+
+and implemented `trait Hittable`
+
+```Rust
+impl<T: Hittable> Hittable for HittableList<T> {
+    fn hit(&self, ray: &Ray, ray_tmin: f64, ray_tmax: f64, rec: &mut HitRecord) -> bool {
+        /*
+        some code
+        */
+    }
+}
+```
+
+and define `ray_color()`
+
+```Rust
+fn ray_color<T: Hittable>(ray: &Ray, world: &T) -> Color {
+}
+```
 
 result\_1([src/ss\_6/sphere\_surface.rs](src/ss_6/sphere_surface.rs))
 
@@ -131,6 +206,33 @@ implemented struct Camera and refacterd main()
 
 antialiasing
 
+for random vector
+
+```Rust
+use rand;
+use rand::Rng;
+
+pub struct Random {
+    rng: rand::rngs::ThreadRng,
+}
+
+impl Random {
+    pub fn new() -> Self {
+        Self {
+            rng: rand::thread_rng(),
+        }
+    }
+
+    pub fn random_f64(&mut self) -> f64 {
+        self.rng.gen_range(0.0..1.0)
+    }
+
+    pub fn random_f64_range(&mut self, min: f64, max: f64) -> f64 {
+        self.rng.gen_range(min..max)
+    }
+}
+```
+
 result([src/ss\_8/antialiasing.rs](src/ss_8/antialiasing.rs))
 
 <img src=fig/antialiasing.ppm.svg>
@@ -142,3 +244,91 @@ diffuse materials
 result\_1([src/ss\_9/diffuse_sphere.rs](src/ss_9/diffuse_sphere.rs))
 
 <img src=fig/diffuse_sphere.ppm.svg>
+
+for gamma correction
+
+gamma correction is defined by
+
+$$
+y = Ax^{\gamma}
+$$
+
+```Rust
+fn linear_to_gamma(linear_component: f64, gamma: f64) -> f64 {
+    if linear_component > 0.0 {
+        return linear_component.powf(gamma);
+    }
+
+    0.0
+}
+
+pub fn write_color_gamma<T: std::io::Write>(
+    gamma: f64,
+    out: &mut T,
+    pixel_color: &Color,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let (r, g, b) = (pixel_color.x(), pixel_color.y(), pixel_color.z());
+    let (r, g, b) = (
+        linear_to_gamma(r, gamma),
+        linear_to_gamma(g, gamma),
+        linear_to_gamma(b, gamma),
+    );
+
+    let intensity = Interval::new_by_value(0.00, 0.999);
+    let (r_byte, g_byte, b_byte) = (
+        (256.000 * intensity.clamp(r)) as i32,
+        (256.000 * intensity.clamp(g)) as i32,
+        (256.000 * intensity.clamp(b)) as i32,
+    );
+
+    std::writeln!(out, "{r_byte} {g_byte} {b_byte}")?;
+    Ok(())
+}
+```
+
+## ss\_10
+
+add material
+
+define `trait Material` and `struct HitRecordMat` as below to avoid circular reference of `trait Material`.
+
+
+```Rust
+pub trait Material {
+    fn scatter(
+        &self,
+        _r_in: &Ray,
+        _rec: &HitRecordMat,
+        _attennuation: &mut Color,
+        _scattered: &mut Ray,
+    ) -> bool {
+        false
+    }
+}
+```
+
+```Rust
+#[derive(Clone)]
+pub struct HitRecordMat {
+    pub p: Point3,
+    pub normal: Vec3,
+    pub mat: Option<Rc<RefCell<dyn Material>>>,
+    pub t: f64,
+    pub front_face: bool,
+}
+```
+
+point:
+
+not
+
+```Rust
+pub mat: <Rc<RefCell<T>>>,
+```
+under the trait bunder `T: Material<T>`
+
+but in
+
+```Rust
+pub mat: Option<Rc<RefCell<dyn Material>>>,
+```
