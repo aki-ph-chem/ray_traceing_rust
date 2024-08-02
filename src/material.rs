@@ -67,7 +67,7 @@ impl Material for Metal {
         attennuation: &mut Color,
         scattered: &mut Ray,
     ) -> bool {
-        let reflected = Vec3::refrect(r_in.direction(), &rec.normal);
+        let reflected = Vec3::reflect(r_in.direction(), &rec.normal);
         *scattered = Ray::from_origin_dir(&rec.p, &reflected);
         *attennuation = self.albedo.clone();
 
@@ -98,7 +98,7 @@ impl Material for MetalFuzz {
         attennuation: &mut Color,
         scattered: &mut Ray,
     ) -> bool {
-        let mut reflected = Vec3::refrect(r_in.direction(), &rec.normal);
+        let mut reflected = Vec3::reflect(r_in.direction(), &rec.normal);
         reflected.normalize();
         reflected += self.fuzz * Vec3::random_unit_vector();
         *scattered = Ray::from_origin_dir(&rec.p, &reflected);

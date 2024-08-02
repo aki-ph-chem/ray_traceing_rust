@@ -67,7 +67,7 @@ impl Vec3 {
         Self::new_unit_vec(Self::random_in_unit_sphere())
     }
 
-    pub fn refrect(v: &Self, n: &Self) -> Self {
+    pub fn reflect(v: &Self, n: &Self) -> Self {
         v.clone() - 2.0 * v.dot(&n) * n.clone()
     }
 
