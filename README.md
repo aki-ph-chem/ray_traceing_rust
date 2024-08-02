@@ -331,3 +331,35 @@ but in
 ```Rust
 pub mat: Option<Rc<RefCell<dyn Material>>>,
 ```
+
+## ss\_11
+
+Snell's law
+
+$$
+\begin{aligned}
+    &\eta\sin \theta = \eta^{\prime} \sin \theta^{\prime}\\
+    &\sin \theta^{\prime} = \frac{\eta}{\eta^{\prime}} \sin \theta
+\end{aligned}
+$$
+
+the refracted ray is splited $\boldsymbol{R}^{\prime}$ into two parts.
+papendicular ot $\boldsymbol{n}^{\prime}$ and parallel to $\boldsymbol{n}^{\prime}$
+
+$$
+\boldsymbol{R}^{\prime} = \boldsymbol{R}^{\prime}_{per} + \boldsymbol{R}^{\prime}_{para}
+$$
+
+$\boldsymbol{R}^{\prime}_{per}$ mean refract <b/>pependicular</b>
+
+$\boldsymbol{R}^{\prime}_{para}$ mean refract <b/>parallel</b>
+
+$$
+\begin{cases}
+    &\boldsymbol{R}^{\prime}_{per} = \frac{\eta}{\eta^{\prime}}
+    \left\{
+        \boldsymbol{R} + (-\boldsymbol{R} \cdot \boldsymbol{n})\boldsymbol{n}
+    \right\}\\
+    &\boldsymbol{R}^{\prime}_{par} = -\left(\sqrt{1 - |\boldsymbol{R}^{\prime}_{per}|^2}\right) \boldsymbol{n}
+\end{cases}
+$$
