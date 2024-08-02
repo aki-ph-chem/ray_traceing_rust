@@ -240,11 +240,17 @@ result([src/ss\_8/antialiasing.rs](src/ss_8/antialiasing.rs))
 
 diffuse materials
 
-result\_1([src/ss\_9/diffuse_sphere.rs](src/ss_9/diffuse_sphere.rs))
+result\_1([src/ss\_9/diffuse\_sphere.rs](src/ss_9/diffuse_sphere.rs))
 
 <img src=fig/diffuse_sphere.ppm.svg>
 
-for gamma correction
+lambertian
+
+result\_2([src/ss\_9/lambertian.rs](src/ss_9/lambertian.rs))
+
+<img src=fig/lambertian.ppm.svg>
+
+gamma correction
 
 gamma correction is defined by
 
@@ -284,6 +290,24 @@ pub fn write_color_gamma<T: std::io::Write>(
     Ok(())
 }
 ```
+
+result\_2([src/ss\_9/gamma\_correction.rs](src/ss_9/gamma_correction.rs))
+
+gamma = 1.5
+
+<img src=fig/gamma_1.5.ppm.svg>
+
+gamma = 1.0
+
+<img src=fig/gamma_1.0.ppm.svg>
+
+gamma = 0.5
+
+<img src=fig/gamma_0.5.ppm.svg>
+
+gamma = 0.25
+
+<img src=fig/gamma_0.25.ppm.svg>
 
 ## ss\_10
 
@@ -331,6 +355,14 @@ but in
 ```Rust
 pub mat: Option<Rc<RefCell<dyn Material>>>,
 ```
+
+result\_1([src/ss\_10/metal\_sphere.rs](src/ss_10/metal_sphere.rs))
+
+<img src=fig/sphere_metal.ppm.svg>
+
+result\_2([src/ss\_10/metal\_sphere\_fuzz.rs](src/ss_10/metal_sphere_fuzz.rs))
+
+<img src=fig/sphere_metal_fuzz.ppm.svg>
 
 ## ss\_11
 
