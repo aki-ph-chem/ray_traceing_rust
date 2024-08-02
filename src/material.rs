@@ -1,6 +1,7 @@
 use crate::color::Color;
 use crate::hittable_material::HitRecordMat;
 use crate::ray::Ray;
+use crate::utl;
 use crate::vec3::Vec3;
 
 pub trait Material {
@@ -174,6 +175,54 @@ impl Material for DielectricV2 {
 
         let cannot_refract = ri * sin_theta > 1.0;
         let direction = if cannot_refract {
+            Vec3::reflect(&unit_direction, &rec.normal)
+        } else {
+            Vec3::refract(&unit_direction, &rec.normal, ri)
+        };
+        *scattered = Ray::from_origin_dir(&rec.p, &direction);
+
+        true
+    }
+}
+
+/// with Schlick Approximation: dependencies of refractive index by angle
+pub struct DielectricV3 {
+    refraction_index: f64,
+}
+
+impl DielectricV3 {
+    pub fn new(refraction_index: f64) -> Self {
+        Self { refraction_index }
+    }
+
+    fn reflectance(cosine: f64, refraction_index: f64) -> f64 {
+        let r_0 = ((1.0 - refraction_index) / (1.0 + refraction_index)).powi(2);
+
+        r_0 + (1.0 - r_0) * (1.0 - cosine).powi(5)
+    }
+}
+
+impl Material for DielectricV3 {
+    fn scatter(
+        &self,
+        r_in: &Ray,
+        rec: &HitRecordMat,
+        attennuation: &mut Color,
+        scattered: &mut Ray,
+    ) -> bool {
+        *attennuation = Color::from_slice([1.0, 1.0, 1.0]);
+        let ri = if rec.front_face {
+            1.0 / self.refraction_index
+        } else {
+            self.refraction_index
+        };
+
+        let unit_direction = Vec3::new_unit_vec(r_in.direction().clone());
+        let cos_theta = (-unit_direction.dot(&rec.normal)).min(1.0);
+        let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
+
+        let cannot_refract = ri * sin_theta > 1.0;
+        let direction = if cannot_refract || Self::reflectance(cos_theta, ri) > utl::random_f64() {
             Vec3::reflect(&unit_direction, &rec.normal)
         } else {
             Vec3::refract(&unit_direction, &rec.normal, ri)
