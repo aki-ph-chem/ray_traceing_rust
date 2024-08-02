@@ -16,6 +16,9 @@ pub struct Camera {
     pub samples_per_pixel: i32,
     pub max_depth: i32,
     pub vfov: f64,
+    pub look_from: Point3,
+    pub look_at: Point3,
+    pub v_up: Point3,
     pixel_samples_scale: f64,
     image_height: i32,
     center: Point3,
@@ -23,6 +26,9 @@ pub struct Camera {
     pixel_delta_u: Vec3,
     pixel_delta_v: Vec3,
     random: utl::Random,
+    u: Vec3,
+    v: Vec3,
+    w: Vec3,
 }
 
 impl Camera {
@@ -33,6 +39,9 @@ impl Camera {
             samples_per_pixel: 10,
             max_depth: 10,
             vfov: 90.0,
+            look_from: Point3::new(),
+            look_at: Point3::from_slice([0.0, 0.0, -1.0]),
+            v_up: Point3::from_slice([0.0, 1.0, 0.0]),
             pixel_samples_scale: 0.0,
             image_height: 0,
             center: Point3::new(),
@@ -40,6 +49,9 @@ impl Camera {
             pixel_delta_u: Vec3::new(),
             pixel_delta_v: Vec3::new(),
             random: utl::Random::new(),
+            u: Vec3::new(),
+            v: Vec3::new(),
+            w: Vec3::new(),
         }
     }
 
@@ -241,6 +253,35 @@ impl Camera {
         Ok(())
     }
 
+    pub fn render_view<T: HittableMat>(
+        &mut self,
+        gamma: f64,
+        world: &T,
+        file_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        self.initialize_view();
+
+        let mut file = File::create(file_name)?;
+        let header = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
+        std::writeln!(&mut file, "{header}")?;
+        for j in 0..self.image_height {
+            eprintln!("\rScanlines remaining: {} ", self.image_height - j);
+            for i in 0..self.image_width {
+                let mut pixel_color = Color::new();
+                for _sample in 0..self.samples_per_pixel {
+                    let ray = self.get_ray(i, j);
+                    pixel_color += Self::ray_color_material(&ray, self.max_depth, world);
+                }
+                pixel_color *= self.pixel_samples_scale;
+                write_color_gamma(gamma, &mut file, &pixel_color)?;
+                pixel_color /= self.pixel_samples_scale;
+            }
+        }
+        eprintln!("\rDone.   ");
+
+        Ok(())
+    }
+
     fn initialize(&mut self) {
         // calculate the image height (Its ensure that it's at leat 1)
         self.image_height = (self.image_width as f64 / self.aspect_ratio) as i32;
@@ -270,6 +311,45 @@ impl Camera {
         // calculate the location of the upper left pixel
         let viewport_upper_left = self.center.clone()
             - Vec3::from_slice([0.0, 0.0, focal_lenth])
+            - viewport_u / 2.0
+            - viewport_v / 2.0;
+        self.pixel00_loc =
+            viewport_upper_left + 0.5 * (self.pixel_delta_u.clone() + self.pixel_delta_v.clone());
+    }
+
+    fn initialize_view(&mut self) {
+        // calculate the image height (Its ensure that it's at leat 1)
+        self.image_height = (self.image_width as f64 / self.aspect_ratio) as i32;
+        self.image_height = if self.image_height < 1 {
+            1
+        } else {
+            self.image_height
+        };
+        self.pixel_samples_scale = 1.0 / self.samples_per_pixel as f64;
+
+        // camera
+        self.center = self.look_from.clone();
+        let focal_lenth = (self.look_from.clone() - self.look_at.clone()).norm();
+        let theta = self.vfov.to_radians();
+        let h = (theta / 2.0).tan();
+        let viewport_height = 2.0 * h * focal_lenth;
+        let viweport_width = viewport_height * (self.image_width as f64 / self.image_height as f64);
+
+        self.w = Vec3::new_unit_vec(self.look_from.clone() - self.look_at.clone());
+        self.u = Vec3::new_unit_vec(self.v_up.cross(&self.w));
+        self.v = self.w.cross(&self.u);
+
+        // calculate the vector across the horizontal and down the vertical viewport edge.
+        let viewport_u = viweport_width * self.u.clone();
+        let viewport_v = -viewport_height * self.v.clone();
+
+        // calculate the horizontal. and vertical delta vectors from pixel to pixel.
+        self.pixel_delta_u = viewport_u.clone() / self.image_width as f64;
+        self.pixel_delta_v = viewport_v.clone() / self.image_height as f64;
+
+        // calculate the location of the upper left pixel
+        let viewport_upper_left = self.center.clone()
+            - (focal_lenth * self.w.clone())
             - viewport_u / 2.0
             - viewport_v / 2.0;
         self.pixel00_loc =
