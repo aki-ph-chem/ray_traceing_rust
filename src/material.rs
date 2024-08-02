@@ -74,3 +74,36 @@ impl Material for Metal {
         true
     }
 }
+
+pub struct MetalFuzz {
+    albedo: Color,
+    fuzz: f64,
+}
+
+impl MetalFuzz {
+    pub fn new(albedo: &Color, fuzz: f64) -> Self {
+        let fuzz = if fuzz < 1.0 { fuzz } else { 1.0 };
+        Self {
+            albedo: albedo.clone(),
+            fuzz,
+        }
+    }
+}
+
+impl Material for MetalFuzz {
+    fn scatter(
+        &self,
+        r_in: &Ray,
+        rec: &HitRecordMat,
+        attennuation: &mut Color,
+        scattered: &mut Ray,
+    ) -> bool {
+        let mut reflected = Vec3::refrect(r_in.direction(), &rec.normal);
+        reflected.normalize();
+        reflected += self.fuzz * Vec3::random_unit_vector();
+        *scattered = Ray::from_origin_dir(&rec.p, &reflected);
+        *attennuation = self.albedo.clone();
+
+        scattered.direction().dot(&rec.normal) > 0.0
+    }
+}

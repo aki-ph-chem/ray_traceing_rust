@@ -59,5 +59,9 @@ path = "src/ss_9/gamma_correction.rs"
 name = "metal_sphere"
 path = "src/ss_10/metal_sphere.rs"
 
+[[bin]]
+name = "metal_sphere_fuzz"
+path = "src/ss_10/metal_sphere_fuzz.rs"
+
 [dependencies]
 rand = "0.8.5"
