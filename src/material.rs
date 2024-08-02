@@ -108,6 +108,7 @@ impl Material for MetalFuzz {
     }
 }
 
+/// not consider total internal reflection
 pub struct Dielectric {
     refraction_index: f64,
 }
@@ -136,6 +137,48 @@ impl Material for Dielectric {
         let unit_direction = Vec3::new_unit_vec(r_in.direction().clone());
         let refracted = Vec3::refract(&unit_direction, &rec.normal, ri);
         *scattered = Ray::from_origin_dir(&rec.p, &refracted);
+
+        true
+    }
+}
+
+/// consider total internal reflection
+pub struct DielectricV2 {
+    refraction_index: f64,
+}
+
+impl DielectricV2 {
+    pub fn new(refraction_index: f64) -> Self {
+        Self { refraction_index }
+    }
+}
+
+impl Material for DielectricV2 {
+    fn scatter(
+        &self,
+        r_in: &Ray,
+        rec: &HitRecordMat,
+        attennuation: &mut Color,
+        scattered: &mut Ray,
+    ) -> bool {
+        *attennuation = Color::from_slice([1.0, 1.0, 1.0]);
+        let ri = if rec.front_face {
+            1.0 / self.refraction_index
+        } else {
+            self.refraction_index
+        };
+
+        let unit_direction = Vec3::new_unit_vec(r_in.direction().clone());
+        let cos_theta = (-unit_direction.dot(&rec.normal)).min(1.0);
+        let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
+
+        let cannot_refract = ri * sin_theta > 1.0;
+        let direction = if cannot_refract {
+            Vec3::reflect(&unit_direction, &rec.normal)
+        } else {
+            Vec3::refract(&unit_direction, &rec.normal, ri)
+        };
+        *scattered = Ray::from_origin_dir(&rec.p, &direction);
 
         true
     }
