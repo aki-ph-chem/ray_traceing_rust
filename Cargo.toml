@@ -75,5 +75,9 @@ path = "src/ss_11/grass_sphere_2.rs"
 name = "grass_sphere_3"
 path = "src/ss_11/grass_sphere_3.rs"
 
+[[bin]]
+name = "camera_view"
+path = "src/ss_12/camera_view.rs"
+
 [dependencies]
 rand = "0.8.5"

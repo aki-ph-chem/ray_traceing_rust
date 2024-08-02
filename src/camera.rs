@@ -15,6 +15,7 @@ pub struct Camera {
     pub image_width: i32,
     pub samples_per_pixel: i32,
     pub max_depth: i32,
+    pub vfov: f64,
     pixel_samples_scale: f64,
     image_height: i32,
     center: Point3,
@@ -31,6 +32,7 @@ impl Camera {
             image_width: 100,
             samples_per_pixel: 10,
             max_depth: 10,
+            vfov: 90.0,
             pixel_samples_scale: 0.0,
             image_height: 0,
             center: Point3::new(),
@@ -252,7 +254,9 @@ impl Camera {
         // camera
         self.center = Point3::from_slice([0.0, 0.0, 0.0]);
         let focal_lenth = 1.0;
-        let viewport_height = 2.0;
+        let theta = self.vfov.to_radians();
+        let h = (theta / 2.0).tan();
+        let viewport_height = 2.0 * h * focal_lenth;
         let viweport_width = viewport_height * (self.image_width as f64 / self.image_height as f64);
 
         // calculate the vector across the horizontal and down the vertical viewport edge.
