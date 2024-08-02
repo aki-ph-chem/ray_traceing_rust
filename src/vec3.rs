@@ -71,6 +71,14 @@ impl Vec3 {
         v.clone() - 2.0 * v.dot(&n) * n.clone()
     }
 
+    pub fn refract(uv: &Self, n: &Self, etai_over_etat: f64) -> Self {
+        let cos_theta = (-uv.dot(&n)).min(1.0);
+        let r_out_perp = etai_over_etat * (uv.clone() + cos_theta * n.clone());
+        let r_out_parallel = -((1.0 - r_out_perp.norm_squared()).abs().sqrt()) * n.clone();
+
+        r_out_perp + r_out_parallel
+    }
+
     pub fn x(&self) -> f64 {
         self.e[0]
     }

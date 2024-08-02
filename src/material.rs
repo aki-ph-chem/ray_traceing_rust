@@ -107,3 +107,36 @@ impl Material for MetalFuzz {
         scattered.direction().dot(&rec.normal) > 0.0
     }
 }
+
+pub struct Dielectric {
+    refraction_index: f64,
+}
+
+impl Dielectric {
+    pub fn new(refraction_index: f64) -> Self {
+        Self { refraction_index }
+    }
+}
+
+impl Material for Dielectric {
+    fn scatter(
+        &self,
+        r_in: &Ray,
+        rec: &HitRecordMat,
+        attennuation: &mut Color,
+        scattered: &mut Ray,
+    ) -> bool {
+        *attennuation = Color::from_slice([1.0, 1.0, 1.0]);
+        let ri = if rec.front_face {
+            1.0 / self.refraction_index
+        } else {
+            self.refraction_index
+        };
+
+        let unit_direction = Vec3::new_unit_vec(r_in.direction().clone());
+        let refracted = Vec3::refract(&unit_direction, &rec.normal, ri);
+        *scattered = Ray::from_origin_dir(&rec.p, &refracted);
+
+        true
+    }
+}

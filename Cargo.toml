@@ -63,5 +63,9 @@ path = "src/ss_10/metal_sphere.rs"
 name = "metal_sphere_fuzz"
 path = "src/ss_10/metal_sphere_fuzz.rs"
 
+[[bin]]
+name = "grass_sphere"
+path = "src/ss_11/grass_sphere.rs"
+
 [dependencies]
 rand = "0.8.5"
