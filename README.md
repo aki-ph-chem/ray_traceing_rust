@@ -395,3 +395,15 @@ $$
     &\boldsymbol{R}^{\prime}_{par} = -\left(\sqrt{1 - |\boldsymbol{R}^{\prime}_{per}|^2}\right) \boldsymbol{n}
 \end{cases}
 $$
+
+result\_1([src/ss\_11/grass\_sphere.rs](src/ss_11/grass_sphere.rs))
+
+<img src=fig/glass_sphere_1.ppm.svg>
+
+result\_2([src/ss\_11/grass\_sphere\_2.rs](src/ss_11/grass_sphere_2.rs))
+
+<img src=fig/glass_sphere_2.ppm.svg>
+
+result\_3([src/ss\_11/grass\_sphere\_3.rs](src/ss_11/grass_sphere_3.rs))
+
+<img src=fig/glass_sphere_3.ppm.svg>
