@@ -71,6 +71,20 @@ impl Vec3 {
         v.clone() - 2.0 * v.dot(&n) * n.clone()
     }
 
+    pub fn random_in_unit_disk() -> Vec3 {
+        let mut random = utl::Random::new();
+        loop {
+            let p = Vec3::from_slice([
+                random.random_f64_range(-1.0, 1.0),
+                random.random_f64_range(-1.0, 1.0),
+                0.0,
+            ]);
+            if p.norm_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
+
     pub fn refract(uv: &Self, n: &Self, etai_over_etat: f64) -> Self {
         let cos_theta = (-uv.dot(&n)).min(1.0);
         let r_out_perp = etai_over_etat * (uv.clone() + cos_theta * n.clone());

@@ -83,5 +83,9 @@ path = "src/ss_12/camera_view.rs"
 name = "camera_view_2"
 path = "src/ss_12/camera_view_2.rs"
 
+[[bin]]
+name = "defocus"
+path = "src/ss_13/defocus.rs"
+
 [dependencies]
 rand = "0.8.5"
