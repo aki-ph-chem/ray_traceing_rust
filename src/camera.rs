@@ -319,6 +319,35 @@ impl Camera {
         Ok(())
     }
 
+    pub fn render_motion_blur<T: HittableMat>(
+        &mut self,
+        gamma: f64,
+        world: &T,
+        file_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        self.initialize_defocus();
+
+        let mut file = File::create(file_name)?;
+        let header = format!("P3\n{} {}\n255\n", self.image_width, self.image_height);
+        std::writeln!(&mut file, "{header}")?;
+        for j in 0..self.image_height {
+            eprintln!("\rScanlines remaining: {} ", self.image_height - j);
+            for i in 0..self.image_width {
+                let mut pixel_color = Color::new();
+                for _sample in 0..self.samples_per_pixel {
+                    let ray = self.get_ray_motion_blur(i, j);
+                    pixel_color += Self::ray_color_material(&ray, self.max_depth, world);
+                }
+                pixel_color *= self.pixel_samples_scale;
+                write_color_gamma(gamma, &mut file, &pixel_color)?;
+                pixel_color /= self.pixel_samples_scale;
+            }
+        }
+        eprintln!("\rDone.   ");
+
+        Ok(())
+    }
+
     fn initialize(&mut self) {
         // calculate the image height (Its ensure that it's at leat 1)
         self.image_height = (self.image_width as f64 / self.aspect_ratio) as i32;
@@ -461,6 +490,23 @@ impl Camera {
         let ray_direction = pixel_sample - ray_origin.clone();
 
         Ray::from_origin_dir(&ray_origin, &ray_direction)
+    }
+
+    fn get_ray_motion_blur(&mut self, i: i32, j: i32) -> Ray {
+        let offset = self.sample_square();
+        let pixel_sample = self.pixel00_loc.clone()
+            + (i as f64 + offset.x()) * self.pixel_delta_u.clone()
+            + (j as f64 + offset.y()) * self.pixel_delta_v.clone();
+        let ray_origin = if self.defocus_angle < 0.0 {
+            self.center.clone()
+        } else {
+            self.defocus_disk_sample()
+        };
+
+        let ray_direction = pixel_sample - ray_origin.clone();
+        let ray_time = utl::random_f64();
+
+        Ray::from_origin_dir_tm(&ray_origin, &ray_direction, ray_time)
     }
 
     fn sample_square(&mut self) -> Vec3 {
