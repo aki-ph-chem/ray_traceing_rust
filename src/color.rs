@@ -2,6 +2,7 @@ use crate::interval::Interval;
 use crate::vec3::Vec3;
 pub type Color = Vec3;
 
+/// gamma correction by x^{\gamma}
 fn linear_to_gamma(linear_component: f64, gamma: f64) -> f64 {
     if linear_component > 0.0 {
         return linear_component.powf(gamma);
@@ -10,6 +11,7 @@ fn linear_to_gamma(linear_component: f64, gamma: f64) -> f64 {
     0.0
 }
 
+/// write color information (r,g,b) to *.ppm file
 pub fn write_color<T: std::io::Write>(
     out: &mut T,
     pixel_color: &Color,
@@ -41,6 +43,7 @@ pub fn write_color_v2<T: std::io::Write>(
     Ok(())
 }
 
+/// write color information (r,g,b) to *.ppm file with gamma correction
 pub fn write_color_gamma<T: std::io::Write>(
     gamma: f64,
     out: &mut T,
