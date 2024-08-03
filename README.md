@@ -407,3 +407,10 @@ result\_2([src/ss\_11/grass\_sphere\_2.rs](src/ss_11/grass_sphere_2.rs))
 result\_3([src/ss\_11/grass\_sphere\_3.rs](src/ss_11/grass_sphere_3.rs))
 
 <img src=fig/glass_sphere_3.ppm.svg>
+
+
+## ss\_14
+
+final render([src/ss\_14/final\_render.rs](src/ss_14/final_render.rs))
+
+<img src=fig/final_one_weekend.ppm.svg width=750 height=422>
