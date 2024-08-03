@@ -428,3 +428,7 @@ result\_3([src/ss\_11/grass\_sphere\_3.rs](src/ss_11/grass_sphere_3.rs))
 final render([src/ss\_14/final\_render.rs](src/ss_14/final_render.rs))
 
 <img src=fig/final_one_weekend.ppm.svg width=750 height=422>
+
+## ss\_15
+
+from here: [_Ray Tracing: The Next Week_](https://raytracing.github.io/books/RayTracingTheNextWeek.html)
