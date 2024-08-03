@@ -2,6 +2,7 @@ use crate::utl;
 use std::fmt::Display;
 use std::ops::{Add, AddAssign, Div, DivAssign, Index, IndexMut, Mul, MulAssign, Neg, Sub};
 
+/// 3-dimentional vector with utility
 #[derive(Debug, Clone)]
 pub struct Vec3 {
     pub e: [f64; 3],
@@ -13,15 +14,18 @@ impl Vec3 {
         Self { e: [0.0, 0.0, 0.0] }
     }
 
+    /// initialize from slice [f64; 3]
     pub fn from_slice(slice: [f64; 3]) -> Self {
         Self { e: slice }
     }
 
+    /// initialize from other value of Vec3
     pub fn new_unit_vec(other: Self) -> Self {
         let norm_other = other.norm();
         other / norm_other
     }
 
+    /// initialize with random values between 0.0 and 1.0
     pub fn random() -> Self {
         let mut random = utl::Random::new();
         Self {
@@ -33,6 +37,7 @@ impl Vec3 {
         }
     }
 
+    /// initialize with random values between min and max
     pub fn random_by_range(min: f64, max: f64) -> Self {
         let mut random = utl::Random::new();
         Self {
@@ -105,10 +110,12 @@ impl Vec3 {
         self.e[2]
     }
 
+    /// get the value of the square of the l_2 norm
     pub fn norm_squared(&self) -> f64 {
         self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]
     }
 
+    /// get the value of the l_2 norm
     pub fn norm(&self) -> f64 {
         self.norm_squared().sqrt()
     }
@@ -118,14 +125,17 @@ impl Vec3 {
         self.x().abs() < s && self.y() < s && self.z() < s
     }
 
+    /// normalize self
     pub fn normalize(&mut self) {
         *self /= self.norm();
     }
 
+    /// sum of comenents x, y, z
     pub fn sum(&self) -> f64 {
         self.x() + self.y() + self.z()
     }
 
+    /// calc dot product between self and other
     pub fn dot(&self, other: &Self) -> f64 {
         self.e
             .iter()
@@ -133,6 +143,7 @@ impl Vec3 {
             .fold(0.0, |res, (u, v)| res + u * v)
     }
 
+    /// calc cross product between self and other
     pub fn cross(&self, other: &Self) -> Self {
         Self {
             e: [
@@ -144,6 +155,7 @@ impl Vec3 {
     }
 }
 
+/// calc dot product between two vectors lhs, rhs
 pub fn dot(lhs: &Vec3, rhs: &Vec3) -> f64 {
     lhs.e
         .iter()
@@ -151,6 +163,7 @@ pub fn dot(lhs: &Vec3, rhs: &Vec3) -> f64 {
         .fold(0.0, |res, (u, v)| res + u * v)
 }
 
+/// calc cross product between two vectors lhs, rhs
 pub fn cross(lhs: &Vec3, rhs: &Vec3) -> Vec3 {
     Vec3 {
         e: [
