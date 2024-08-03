@@ -8,5 +8,6 @@ pub mod material;
 pub mod ray;
 pub mod sphere;
 pub mod sphere_material;
+pub mod sphere_moving;
 pub mod utl;
 pub mod vec3;
