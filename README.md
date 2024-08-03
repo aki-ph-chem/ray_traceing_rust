@@ -5,7 +5,10 @@ on [Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInO
 <!-- memo -->
 ## ss\_2
 
-to save result as file
+In this text, the rendering results are output to standard output.
+And redirecting (by '>') this output, we get the \*.ppm file.
+
+Here, however, I have chosen to output the following to a file.
 
 ```Rust
 use std::fs::File;
@@ -20,16 +23,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 
     /*
-       some code
-     */
+       code
+    */
 
-    std::writeln!(&mut file, some_string)?;
+    // in render loop
+    std::writeln!(&mut file, "{ir} {ig} {ib}")?;
 
     Ok(())
 }
 ```
-
-I implemented program which generat \*\.ppm image file.
 
 result([src/ss\_2/ppm\_img.rs](src/ss_2/ppm_img.rs))
 
@@ -37,9 +39,21 @@ result([src/ss\_2/ppm\_img.rs](src/ss_2/ppm_img.rs))
 
 ## ss\_3
 
-I implemented 3-dimentional vector library and utility.
+I implemented [three-dimentional vector and its utility modules](src/vec3.rs) by full-scratch(not use linear algebra crate).
 
-result([src/ss\_3/ppm\_img.rs](src/ss_3/ppm_img.rs))
+The same vector module is used for three-dimensional coordinates and color (r,g,b).
+
+When expressing colors, the type alias
+
+```Rust
+pub type Color = Vec3;
+```
+is used (in [src/color.rs](src/color.rs)) to distinguish them in the code.
+
+And separate process of writing from r,g,b color information in render loop to \*.ppm file as
+`write_color()`. (in [src/color.rs](src/color.rs))
+
+result(same as ss\_2)([src/ss\_3/ppm\_img.rs](src/ss_3/ppm_img.rs))
 
 <img src=fig/first_ppm_image.svg>
 
