@@ -31,7 +31,7 @@ impl Lambertian {
 impl Material for Lambertian {
     fn scatter(
         &self,
-        _r_in: &Ray,
+        r_in: &Ray,
         rec: &HitRecordMat,
         attennuation: &mut Color,
         scattered: &mut Ray,
@@ -42,7 +42,7 @@ impl Material for Lambertian {
             scatter_direction = rec.normal.clone();
         }
 
-        *scattered = Ray::from_origin_dir(&rec.p, &scatter_direction);
+        *scattered = Ray::from_origin_dir_tm(&rec.p, &scatter_direction, r_in.time());
         *attennuation = self.albedo.clone();
         true
     }
@@ -69,7 +69,7 @@ impl Material for Metal {
         scattered: &mut Ray,
     ) -> bool {
         let reflected = Vec3::reflect(r_in.direction(), &rec.normal);
-        *scattered = Ray::from_origin_dir(&rec.p, &reflected);
+        *scattered = Ray::from_origin_dir_tm(&rec.p, &reflected, r_in.time());
         *attennuation = self.albedo.clone();
 
         true
@@ -102,7 +102,7 @@ impl Material for MetalFuzz {
         let mut reflected = Vec3::reflect(r_in.direction(), &rec.normal);
         reflected.normalize();
         reflected += self.fuzz * Vec3::random_unit_vector();
-        *scattered = Ray::from_origin_dir(&rec.p, &reflected);
+        *scattered = Ray::from_origin_dir_tm(&rec.p, &reflected, r_in.time());
         *attennuation = self.albedo.clone();
 
         scattered.direction().dot(&rec.normal) > 0.0
@@ -227,7 +227,7 @@ impl Material for DielectricV3 {
         } else {
             Vec3::refract(&unit_direction, &rec.normal, ri)
         };
-        *scattered = Ray::from_origin_dir(&rec.p, &direction);
+        *scattered = Ray::from_origin_dir_tm(&rec.p, &direction, r_in.time());
 
         true
     }
