@@ -91,5 +91,9 @@ path = "src/ss_13/defocus.rs"
 name = "final_render"
 path = "src/ss_14/final_render.rs"
 
+[[bin]]
+name = "motion_blur"
+path = "src/ss_15/motion_blur.rs"
+
 [dependencies]
 rand = "0.8.5"

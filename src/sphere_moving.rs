@@ -15,7 +15,21 @@ pub struct SphereMoving {
 }
 
 impl SphereMoving {
-    pub fn new(
+    pub fn new_stationary(
+        center: &Point3,
+        radius: f64,
+        mat: Option<Rc<RefCell<dyn Material>>>,
+    ) -> Self {
+        Self {
+            center_1: center.clone(),
+            radius: radius.max(0.0),
+            mat,
+            is_moving: false,
+            center_vec: Point3::new(),
+        }
+    }
+
+    pub fn new_moving(
         center_1: &Point3,
         center_2: &Point3,
         radius: f64,
