@@ -17,6 +17,10 @@ pub fn random_f64_range(min: f64, max: f64) -> f64 {
     rng.gen_range(min..max)
 }
 
+pub fn random_i32(min: f64, max: f64) -> i32 {
+    (min + (max - min) as f64 * random_f64()) as i32
+}
+
 pub struct Random {
     rng: rand::rngs::ThreadRng,
 }
