@@ -1,3 +1,4 @@
+use crate::aabb::AaBb;
 use crate::interval::Interval;
 use crate::material::Material;
 use crate::ray::Ray;
@@ -37,4 +38,9 @@ impl HitRecordMat {
 
 pub trait HittableMat {
     fn hit_mat(&self, ray: &Ray, ray_t: Interval, rec: &mut HitRecordMat) -> bool;
+}
+
+pub trait HittableAaBb {
+    fn hit_aabb(&self, ray: &Ray, ray_t: Interval, rec: &mut HitRecordMat) -> bool;
+    fn bounding_box(&self) -> AaBb;
 }

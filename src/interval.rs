@@ -18,6 +18,14 @@ impl Interval {
         Self { min, max }
     }
 
+    pub fn new_by_two_intervals(a: &Interval, b: &Interval) -> Interval {
+        let mut interval = Interval::new();
+        interval.min = if a.min <= b.min { a.min } else { b.min };
+        interval.max = if a.max >= b.max { a.max } else { b.max };
+
+        interval
+    }
+
     pub fn size(&self) -> f64 {
         self.max - self.min
     }

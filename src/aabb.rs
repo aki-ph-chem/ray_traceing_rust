@@ -3,6 +3,7 @@ use crate::ray::Ray;
 use crate::vec3::Point3;
 
 /// Axis-aligned bounding box
+#[derive(Clone)]
 pub struct AaBb {
     pub x: Interval,
     pub y: Interval,
@@ -47,6 +48,15 @@ impl AaBb {
         } else {
             Interval::new_by_value(b[2], a[2])
         };
+
+        aabb
+    }
+
+    pub fn new_by_two_aabb(box_0: &Self, box_1: &Self) -> Self {
+        let mut aabb = Self::new();
+        aabb.x = Interval::new_by_two_intervals(&box_0.x, &box_1.x);
+        aabb.y = Interval::new_by_two_intervals(&box_0.y, &box_1.y);
+        aabb.z = Interval::new_by_two_intervals(&box_0.z, &box_1.z);
 
         aabb
     }
