@@ -432,3 +432,7 @@ final render([src/ss\_14/final\_render.rs](src/ss_14/final_render.rs))
 ## ss\_15
 
 from here: [_Ray Tracing: The Next Week_](https://raytracing.github.io/books/RayTracingTheNextWeek.html)
+
+result\_1([src/ss\_15/motion\_blur.rs](src/ss_15/motion_blur.rs))
+
+<img src=fig/motion_blur.ppm.svg>
